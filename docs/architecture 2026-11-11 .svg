@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="900" viewBox="0 0 1800 900" font-family="DejaVu Sans, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5F5E5A"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#993556"/></marker></defs>
+<rect width="1800" height="900" fill="#FFFFFF"/>
+<text x="40" y="58" font-size="30" font-weight="bold" fill="#2C2C2A">Healthcare lakehouse: HL7 v2 + FHIR R4 integration</text>
+<text x="40" y="90" font-size="17" fill="#5F5E5A">Databricks · Unity Catalog · Delta Lake · Spark SQL · PySpark · synthetic patients from Synthea</text>
+<g font-size="16" font-weight="bold" fill="#444441" text-anchor="middle">
+<text x="150" y="140">SOURCES</text><text x="410" y="140">LANDING</text><text x="660" y="140">BRONZE</text><text x="940" y="140">SILVER</text><text x="1260" y="140">GOLD</text><text x="1625" y="140">SERVE</text></g>
+<g font-size="15">
+<rect x="40" y="165" width="220" height="150" rx="10" fill="#F1EFE8" stroke="#888780"/>
+<text x="150" y="198" text-anchor="middle" font-weight="bold" font-size="17" fill="#2C2C2A">FHIR R4 export</text>
+<text x="150" y="226" text-anchor="middle" fill="#444441">Regional EHR (modern)</text>
+<text x="150" y="252" text-anchor="middle" fill="#444441">112 patient bundles</text>
+<text x="150" y="276" text-anchor="middle" fill="#444441">+ facilities, clinicians</text>
+<rect x="40" y="485" width="220" height="150" rx="10" fill="#F1EFE8" stroke="#888780"/>
+<text x="150" y="518" text-anchor="middle" font-weight="bold" font-size="17" fill="#2C2C2A">HL7 v2.5.1 ADT feed</text>
+<text x="150" y="546" text-anchor="middle" fill="#444441">Legacy hospital systems</text>
+<text x="150" y="572" text-anchor="middle" fill="#444441">A01 A02 A03 A04</text>
+<text x="150" y="596" text-anchor="middle" fill="#444441">3,722 messages, messy</text>
+<line x1="150" y1="317" x2="150" y2="481" stroke="#B4B2A9" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#a)"/>
+<rect x="62" y="378" width="176" height="44" fill="#FFFFFF"/>
+<text x="150" y="395" text-anchor="middle" font-size="13" fill="#5F5E5A">fhir_to_hl7v2.py</text>
+<text x="150" y="413" text-anchor="middle" font-size="13" fill="#5F5E5A">(generates the feed)</text>
+<rect x="310" y="165" width="200" height="150" rx="10" fill="#E6F1FB" stroke="#185FA5"/>
+<text x="410" y="198" text-anchor="middle" font-weight="bold" font-size="17" fill="#0C447C">fhir_raw</text>
+<text x="410" y="228" text-anchor="middle" fill="#185FA5">UC Volume</text>
+<text x="410" y="254" text-anchor="middle" fill="#185FA5">landing/</text>
+<text x="410" y="278" text-anchor="middle" fill="#185FA5">→ processed/</text>
+<rect x="310" y="485" width="200" height="150" rx="10" fill="#E6F1FB" stroke="#185FA5"/>
+<text x="410" y="518" text-anchor="middle" font-weight="bold" font-size="17" fill="#0C447C">hl7_raw</text>
+<text x="410" y="548" text-anchor="middle" fill="#185FA5">UC Volume</text>
+<text x="410" y="574" text-anchor="middle" fill="#185FA5">landing/</text>
+<text x="410" y="598" text-anchor="middle" fill="#185FA5">→ processed/</text>
+<rect x="560" y="165" width="200" height="150" rx="10" fill="#FAEEDA" stroke="#854F0B"/>
+<text x="660" y="198" text-anchor="middle" font-weight="bold" font-size="17" fill="#633806">fhir_bundles</text>
+<text x="660" y="228" text-anchor="middle" fill="#854F0B">1 row per bundle</text>
+<text x="660" y="254" text-anchor="middle" fill="#854F0B">raw JSON text</text>
+<text x="660" y="278" text-anchor="middle" fill="#854F0B">+ audit columns</text>
+<rect x="560" y="485" width="200" height="150" rx="10" fill="#FAEEDA" stroke="#854F0B"/>
+<text x="660" y="518" text-anchor="middle" font-weight="bold" font-size="17" fill="#633806">hl7_messages</text>
+<text x="660" y="548" text-anchor="middle" fill="#854F0B">1 row per message</text>
+<text x="660" y="574" text-anchor="middle" fill="#854F0B">raw text + hash</text>
+<text x="660" y="598" text-anchor="middle" fill="#854F0B">+ audit columns</text>
+<rect x="810" y="165" width="260" height="150" rx="10" fill="#F1EFE8" stroke="#5F5E5A"/>
+<text x="940" y="198" text-anchor="middle" font-weight="bold" font-size="17" fill="#2C2C2A">Flatten FHIR</text>
+<text x="940" y="228" text-anchor="middle" fill="#444441">fhir_resources →</text>
+<text x="940" y="254" text-anchor="middle" fill="#444441">patients, encounters,</text>
+<text x="940" y="278" text-anchor="middle" fill="#444441">conditions, organizations</text>
+<rect x="810" y="485" width="260" height="150" rx="10" fill="#F1EFE8" stroke="#5F5E5A"/>
+<text x="940" y="518" text-anchor="middle" font-weight="bold" font-size="17" fill="#2C2C2A">Parse HL7</text>
+<text x="940" y="548" text-anchor="middle" fill="#444441">dedupe, MSH/PID/PV1/DG1,</text>
+<text x="940" y="574" text-anchor="middle" fill="#444441">fix MRNs, timestamps</text>
+<text x="940" y="598" text-anchor="middle" fill="#444441">→ hl7_encounters</text>
+<rect x="810" y="345" width="260" height="110" rx="10" fill="#FBEAF0" stroke="#993556" stroke-width="2"/>
+<text x="940" y="378" text-anchor="middle" font-weight="bold" font-size="17" fill="#72243E">Patient matching</text>
+<text x="940" y="406" text-anchor="middle" fill="#993556">enterprise ID, then name,</text>
+<text x="940" y="430" text-anchor="middle" fill="#993556">DOB, sex, ZIP scoring</text>
+<rect x="1110" y="165" width="300" height="470" rx="14" fill="#FFF8E7" stroke="#BA7517" stroke-width="2"/>
+<rect x="1135" y="185" width="250" height="230" rx="10" fill="#EF9F27" stroke="#854F0B"/>
+<text x="1260" y="218" text-anchor="middle" font-weight="bold" font-size="17" fill="#412402">Star schema</text>
+<text x="1260" y="250" text-anchor="middle" fill="#412402">fact_encounter</text>
+<text x="1260" y="276" text-anchor="middle" fill="#412402">fact_encounter_diagnosis</text>
+<text x="1260" y="302" text-anchor="middle" fill="#412402">dim_patient</text>
+<text x="1260" y="328" text-anchor="middle" fill="#412402">dim_facility</text>
+<text x="1260" y="354" text-anchor="middle" fill="#412402">dim_diagnosis</text>
+<text x="1260" y="380" text-anchor="middle" fill="#412402">dim_date</text>
+<rect x="1135" y="440" width="250" height="170" rx="10" fill="#FAEEDA" stroke="#BA7517"/>
+<text x="1260" y="473" text-anchor="middle" font-weight="bold" font-size="17" fill="#633806">De-identified</text>
+<text x="1260" y="502" text-anchor="middle" fill="#854F0B">salted SHA-256 keys</text>
+<text x="1260" y="528" text-anchor="middle" fill="#854F0B">birth year, 3-digit ZIP</text>
+<text x="1260" y="554" text-anchor="middle" fill="#854F0B">length of stay,</text>
+<text x="1260" y="578" text-anchor="middle" fill="#854F0B">30-day readmission</text>
+<rect x="1460" y="185" width="300" height="150" rx="10" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="1610" y="220" text-anchor="middle" font-weight="bold" font-size="17" fill="#085041">Reporting views</text>
+<text x="1610" y="250" text-anchor="middle" fill="#0F6E56">vw_encounter_analytics</text>
+<text x="1610" y="276" text-anchor="middle" fill="#0F6E56">vw_encounter_diagnoses</text>
+<rect x="1460" y="380" width="300" height="160" rx="10" fill="#E1F5EE" stroke="#0F6E56"/>
+<text x="1610" y="415" text-anchor="middle" font-weight="bold" font-size="17" fill="#085041">AI/BI dashboard</text>
+<text x="1610" y="444" text-anchor="middle" fill="#0F6E56">encounters, length of stay,</text>
+<text x="1610" y="468" text-anchor="middle" fill="#0F6E56">readmissions, diagnoses,</text>
+<text x="1610" y="492" text-anchor="middle" fill="#0F6E56">source coverage</text>
+</g>
+<g stroke="#5F5E5A" stroke-width="2.5" fill="none">
+<line x1="262" y1="240" x2="306" y2="240" marker-end="url(#a)"/><line x1="262" y1="560" x2="306" y2="560" marker-end="url(#a)"/>
+<line x1="512" y1="240" x2="556" y2="240" marker-end="url(#a)"/><line x1="512" y1="560" x2="556" y2="560" marker-end="url(#a)"/>
+<line x1="762" y1="240" x2="806" y2="240" marker-end="url(#a)"/><line x1="762" y1="560" x2="806" y2="560" marker-end="url(#a)"/>
+<line x1="1072" y1="240" x2="1131" y2="260" marker-end="url(#a)"/><line x1="1072" y1="560" x2="1131" y2="380" marker-end="url(#a)"/>
+<line x1="1387" y1="260" x2="1456" y2="260" marker-end="url(#a)"/><line x1="1610" y1="337" x2="1610" y2="376" marker-end="url(#a)"/>
+</g>
+<g stroke="#993556" stroke-width="2.5" fill="none">
+<line x1="940" y1="317" x2="940" y2="341" marker-end="url(#b)"/><line x1="940" y1="483" x2="940" y2="459" marker-end="url(#b)"/>
+<line x1="1072" y1="400" x2="1131" y2="330" marker-end="url(#b)"/>
+</g>
+<rect x="40" y="690" width="1720" height="64" rx="10" fill="#FBEAF0" stroke="#ED93B1"/>
+<text x="900" y="719" text-anchor="middle" font-size="16" font-weight="bold" fill="#72243E">Privacy by layer: bronze raw (restricted) → silver minimum necessary: name, DOB, sex, ZIP → gold pseudonymised: no direct identifiers</text>
+<text x="900" y="742" text-anchor="middle" font-size="14" fill="#993556">SSN, street address, phone, licence and passport never leave bronze · 88 of 88 patients linked, 0 false matches · 1,799 visits linked one-to-one</text>
+<rect x="40" y="780" width="1720" height="64" rx="10" fill="#F1EFE8" stroke="#B4B2A9"/>
+<text x="900" y="809" text-anchor="middle" font-size="16" font-weight="bold" fill="#2C2C2A">Notebooks: setup → bronze HL7 + FHIR → silver HL7 + FHIR → patient matching → gold star schema → views and dashboard</text>
+<text x="900" y="832" text-anchor="middle" font-size="14" fill="#5F5E5A">Incremental landing → processed file handling · idempotent rebuilds · validation queries with expected values at every step</text>
+</svg>
