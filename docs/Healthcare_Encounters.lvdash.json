@@ -1,0 +1,833 @@
+{
+ "datasets": [
+  {
+   "name": "ds_encounters",
+   "displayName": "encounters",
+   "queryLines": [
+    "SELECT *,\n",
+    "       CASE WHEN encounter_class = 'IMP' THEN length_of_stay_days END AS inpatient_los_days,\n",
+    "       CASE WHEN readmitted_within_30d THEN 1 ELSE 0 END AS readmission_flag\n",
+    "FROM health.gold.vw_encounter_analytics\n",
+    "WHERE admit_year >= 2015"
+   ]
+  },
+  {
+   "name": "ds_diagnoses",
+   "displayName": "diagnoses",
+   "queryLines": [
+    "SELECT * FROM health.gold.vw_encounter_diagnoses WHERE admit_year >= 2015"
+   ]
+  }
+ ],
+ "pages": [
+  {
+   "name": "encounters_page",
+   "displayName": "Encounters",
+   "layout": [
+    {
+     "widget": {
+      "name": "page_heading",
+      "spec": {
+       "widgetType": "text",
+       "version": 1,
+       "encodings": {
+        "text": {
+         "lines": [
+          "# Healthcare Encounters, 2015\u20132026\n",
+          "Synthetic patients \u00b7 HL7 v2 ADT feed + FHIR R4 export \u00b7 de-identified gold layer"
+         ],
+         "fields": []
+        }
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 1
+     }
+    },
+    {
+     "widget": {
+      "name": "filter_year",
+      "queries": [
+       {
+        "name": "filter_year_ds_encounters",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "admit_year",
+           "expression": "`admit_year`"
+          },
+          {
+           "name": "admit_year_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       },
+       {
+        "name": "filter_year_ds_diagnoses",
+        "query": {
+         "datasetName": "ds_diagnoses",
+         "fields": [
+          {
+           "name": "admit_year",
+           "expression": "`admit_year`"
+          },
+          {
+           "name": "admit_year_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "frame": {
+        "showTitle": true,
+        "title": "Year"
+       },
+       "widgetType": "filter-multi-select",
+       "encodings": {
+        "fields": [
+         {
+          "fieldName": "admit_year",
+          "queryName": "filter_year_ds_encounters"
+         },
+         {
+          "fieldName": "admit_year",
+          "queryName": "filter_year_ds_diagnoses"
+         }
+        ]
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 1,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "filter_class",
+      "queries": [
+       {
+        "name": "filter_class_ds_encounters",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "encounter_class_name",
+           "expression": "`encounter_class_name`"
+          },
+          {
+           "name": "encounter_class_name_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       },
+       {
+        "name": "filter_class_ds_diagnoses",
+        "query": {
+         "datasetName": "ds_diagnoses",
+         "fields": [
+          {
+           "name": "encounter_class_name",
+           "expression": "`encounter_class_name`"
+          },
+          {
+           "name": "encounter_class_name_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "frame": {
+        "showTitle": true,
+        "title": "Encounter class"
+       },
+       "widgetType": "filter-multi-select",
+       "encodings": {
+        "fields": [
+         {
+          "fieldName": "encounter_class_name",
+          "queryName": "filter_class_ds_encounters"
+         },
+         {
+          "fieldName": "encounter_class_name",
+          "queryName": "filter_class_ds_diagnoses"
+         }
+        ]
+       }
+      }
+     },
+     "position": {
+      "x": 3,
+      "y": 1,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "filter_facility",
+      "queries": [
+       {
+        "name": "filter_facility_ds_encounters",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "facility_name",
+           "expression": "`facility_name`"
+          },
+          {
+           "name": "facility_name_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "frame": {
+        "showTitle": true,
+        "title": "Facility"
+       },
+       "widgetType": "filter-multi-select",
+       "encodings": {
+        "fields": [
+         {
+          "fieldName": "facility_name",
+          "queryName": "filter_facility_ds_encounters"
+         }
+        ]
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 1,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "filter_sex",
+      "queries": [
+       {
+        "name": "filter_sex_ds_encounters",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "sex",
+           "expression": "`sex`"
+          },
+          {
+           "name": "sex_associativity",
+           "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "version": 2,
+       "frame": {
+        "showTitle": true,
+        "title": "Sex"
+       },
+       "widgetType": "filter-multi-select",
+       "encodings": {
+        "fields": [
+         {
+          "fieldName": "sex",
+          "queryName": "filter_sex_ds_encounters"
+         }
+        ]
+       }
+      }
+     },
+     "position": {
+      "x": 9,
+      "y": 1,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi_encounters",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "encounters",
+           "expression": "COUNT(`encounter_key`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Encounters"
+       },
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "encounters"
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 3,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi_patients",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "patients",
+           "expression": "COUNT(DISTINCT `patient_key`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Patients"
+       },
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "patients"
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 3,
+      "y": 3,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi_avg_stay",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "avg_inpatient_days",
+           "expression": "AVG(`inpatient_los_days`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Avg inpatient stay (days)"
+       },
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "avg_inpatient_days"
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 3,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "kpi_readmissions",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "readmissions",
+           "expression": "SUM(`readmission_flag`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "30-day readmissions"
+       },
+       "version": 2,
+       "widgetType": "counter",
+       "encodings": {
+        "value": {
+         "fieldName": "readmissions"
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 9,
+      "y": 3,
+      "width": 3,
+      "height": 2
+     }
+    },
+    {
+     "widget": {
+      "name": "encounters_by_year",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "admit_year",
+           "expression": "`admit_year`"
+          },
+          {
+           "name": "y_value",
+           "expression": "COUNT(`encounter_key`)"
+          },
+          {
+           "name": "encounter_class_name",
+           "expression": "`encounter_class_name`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Encounters by year and class"
+       },
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "admit_year",
+         "displayName": "Year",
+         "scale": {
+          "type": "categorical"
+         }
+        },
+        "y": {
+         "fieldName": "y_value",
+         "displayName": "Encounters",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "color": {
+         "fieldName": "encounter_class_name",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 5,
+      "width": 8,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "source_coverage",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "encounterCount",
+           "expression": "COUNT(`encounter_key`)"
+          },
+          {
+           "name": "sourceName",
+           "expression": "`source_systems`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Encounters by source system"
+       },
+       "jsonSpec": {
+        "spec": "{\"$schema\": \"https://vega.github.io/schema/vega-lite/v6.json\", \"data\": {\"name\": \"databricks_query\"}, \"width\": \"container\", \"height\": \"container\", \"config\": {\"autosize\": {\"type\": \"fit\", \"contains\": \"padding\"}}, \"transform\": [{\"window\": [{\"op\": \"sum\", \"field\": \"encounterCount\", \"as\": \"total\"}]}, {\"calculate\": \"datum.encounterCount / datum.total\", \"as\": \"pct\"}], \"layer\": [{\"mark\": {\"type\": \"arc\", \"innerRadius\": 60, \"outerRadius\": 110}, \"encoding\": {\"theta\": {\"field\": \"encounterCount\", \"type\": \"quantitative\"}, \"color\": {\"field\": \"sourceName\", \"type\": \"nominal\", \"legend\": {\"title\": \"Reported by\"}}}}, {\"mark\": {\"type\": \"text\", \"radius\": 85, \"fontSize\": 12, \"fill\": {\"expr\": \"colors.textPrimary.default\"}}, \"encoding\": {\"theta\": {\"field\": \"encounterCount\", \"type\": \"quantitative\"}, \"text\": {\"field\": \"pct\", \"type\": \"quantitative\", \"format\": \".1%\"}}}]}",
+        "type": "vega-lite"
+       },
+       "version": 1,
+       "widgetType": "custom-vega-viz",
+       "encodings": {
+        "fields": [
+         {
+          "fieldName": "encounterCount"
+         },
+         {
+          "fieldName": "sourceName"
+         }
+        ]
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 8,
+      "y": 5,
+      "width": 4,
+      "height": 6
+     }
+    },
+    {
+     "widget": {
+      "name": "top_facilities",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "facility_name",
+           "expression": "`facility_name`"
+          },
+          {
+           "name": "y_value",
+           "expression": "COUNT(`encounter_key`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Top 10 facilities by encounters"
+       },
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "facility_name",
+         "displayName": "Facility",
+         "scale": {
+          "type": "categorical",
+          "categorySize": {
+           "number": 10,
+           "type": "number-of-categories"
+          },
+          "sort": {
+           "by": "y-reversed"
+          }
+         }
+        },
+        "y": {
+         "fieldName": "y_value",
+         "displayName": "Encounters",
+         "scale": {
+          "type": "quantitative"
+         }
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 11,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "age_groups",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "age_group",
+           "expression": "`age_group`"
+          },
+          {
+           "name": "y_value",
+           "expression": "COUNT(`encounter_key`)"
+          },
+          {
+           "name": "sex",
+           "expression": "`sex`"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Encounters by age group and sex"
+       },
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "age_group",
+         "displayName": "Age group",
+         "scale": {
+          "type": "categorical"
+         }
+        },
+        "y": {
+         "fieldName": "y_value",
+         "displayName": "Encounters",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "color": {
+         "fieldName": "sex",
+         "scale": {
+          "type": "categorical"
+         }
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 6,
+      "y": 11,
+      "width": 6,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "top_diagnoses",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_diagnoses",
+         "fields": [
+          {
+           "name": "diagnosis_name",
+           "expression": "`diagnosis_name`"
+          },
+          {
+           "name": "y_value",
+           "expression": "COUNT(`encounter_key`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Top 10 diagnoses"
+       },
+       "version": 3,
+       "widgetType": "bar",
+       "encodings": {
+        "x": {
+         "fieldName": "diagnosis_name",
+         "displayName": "Diagnosis (SNOMED CT)",
+         "scale": {
+          "type": "categorical",
+          "categorySize": {
+           "number": 10,
+           "type": "number-of-categories"
+          },
+          "sort": {
+           "by": "y-reversed"
+          }
+         }
+        },
+        "y": {
+         "fieldName": "y_value",
+         "displayName": "Encounters",
+         "scale": {
+          "type": "quantitative"
+         }
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 18,
+      "width": 12,
+      "height": 7
+     }
+    },
+    {
+     "widget": {
+      "name": "inpatient_los_trend",
+      "queries": [
+       {
+        "name": "main_query",
+        "query": {
+         "datasetName": "ds_encounters",
+         "fields": [
+          {
+           "name": "admit_year",
+           "expression": "`admit_year`"
+          },
+          {
+           "name": "avg_los",
+           "expression": "AVG(`inpatient_los_days`)"
+          }
+         ],
+         "disaggregated": false
+        }
+       }
+      ],
+      "spec": {
+       "frame": {
+        "showTitle": true,
+        "title": "Average inpatient stay (days) by year"
+       },
+       "version": 3,
+       "widgetType": "line",
+       "encodings": {
+        "x": {
+         "fieldName": "admit_year",
+         "displayName": "Year",
+         "scale": {
+          "type": "categorical"
+         }
+        },
+        "y": {
+         "fieldName": "avg_los",
+         "displayName": "Days",
+         "scale": {
+          "type": "quantitative"
+         }
+        },
+        "label": {
+         "show": true
+        }
+       },
+       "data": {
+        "queryName": "main_query"
+       }
+      }
+     },
+     "position": {
+      "x": 0,
+      "y": 25,
+      "width": 12,
+      "height": 6
+     }
+    }
+   ],
+   "pageType": "PAGE_TYPE_CANVAS",
+   "layoutVersion": "GRID_V1"
+  }
+ ],
+ "uiSettings": {
+  "theme": {
+   "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+  },
+  "applyModeEnabled": false
+ }
+}
